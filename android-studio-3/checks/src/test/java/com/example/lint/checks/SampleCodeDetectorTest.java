@@ -15,14 +15,31 @@
  */
 package com.example.lint.checks;
 
+import com.android.annotations.NonNull;
+import com.android.testutils.TestUtils;
 import com.android.tools.lint.checks.infrastructure.LintDetectorTest;
+import com.android.tools.lint.checks.infrastructure.TestLintTask;
 import com.android.tools.lint.detector.api.Detector;
 import com.android.tools.lint.detector.api.Issue;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 public class SampleCodeDetectorTest extends LintDetectorTest {
+//    static File sdk;
+//    static {
+//        sdk = TestUtils.getSdk();
+//    }
+//
+//    @Override
+//    @NonNull
+//    protected TestLintTask lint() {
+//        TestLintTask task = TestLintTask.lint();
+//        task.sdkHome(sdk);
+//        return task;
+//    }
+
     public void testBasic() {
         lint().files(
                 java("" +
@@ -31,12 +48,19 @@ public class SampleCodeDetectorTest extends LintDetectorTest {
                         "    // In a comment, mentioning \"lint\" has no effect\n" +
                         "    private static String s1 = \"Ignore non-word usages: linting\";\n" +
                         "    private static String s2 = \"Let's say it: lint\";\n" +
+
+                        "    private void calLLog(String v) {\n" +
+                        "        int a = 2;\n" +
+                        "        int b = a + c;\n" +
+                        "        calLLog(\"2\");\n" +
+                        "        \n" +
+                        "    }\n" +
                         "}"))
-                .run()
-                .expect("src/test/pkg/TestClass1.java:5: Warning: This code mentions lint: Congratulations [ShortUniqueId]\n" +
-                        "    private static String s2 = \"Let's say it: lint\";\n" +
-                        "                               ~~~~~~~~~~~~~~~~~~~~\n" +
-                        "0 errors, 1 warnings\n");
+                .run();
+//                .expect("src/test/pkg/TestClass1.java:5: Warning: This code mentions lint: Congratulations [ShortUniqueId]\n" +
+//                        "    private static String s2 = \"Let's say it: lint\";\n" +
+//                        "                               ~~~~~~~~~~~~~~~~~~~~\n" +
+//                        "0 errors, 1 warnings\n");
     }
 
     @Override
